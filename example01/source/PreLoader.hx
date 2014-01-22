@@ -24,10 +24,6 @@ class PreLoader extends State {
         string = "Loading";
         spriteAssets = [
             "background.png",
-            "boat.png",
-            "submarine.png",
-            "barrel.png",
-            "bomb.png",
             "explosion.png",
 
         ];
