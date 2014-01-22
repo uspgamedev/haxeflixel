@@ -6,14 +6,15 @@
          For compatibility with Android and webOS, the package name must include
          at least three "sections", and the version should have exactly three
          "sections". -->
-    <meta description="Simple game structure" package="com.example.hfgame"
-          version="0.1.0" company="Company Name" />
+    <meta description="Click or tap to create explosions."
+          package="org.uspgamedev.example" version="0.1.0"
+          company="USPGameDev" />
 
     <!-- Basic program attributes
          title: String shown in title bar;
          file: Output file name;
          main: Main class of the project. -->
-	<app title="HaxeFlixel Game" file="HFGame" main="Main" />
+	<app title="HaxeFlixel example01" file="example01" main="Main" />
 
     <!-- Set an icon for you project (if you have one).
          If you specify a bitmap icon, you can include multiple icon nodes, each
