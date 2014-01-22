@@ -1,0 +1,207 @@
+=======================
+Instalando o HaxeFlixel
+=======================
+
+O primeiro passo é instalar o compilador Haxe. Para isso, siga as instruções do
+site oficial (http://haxeflixel.com/documentation/install-haxe/) ou procure no
+gerenciador de pacotes da sua distribuição.
+
+Em particular, usando o Arch Linux, basta executar:
+$ yaourt -S haxe
+
+Depois de terminar a instalação, é interessante conferir se o compilador está
+funcionando. Use o comando abaixo para verificar se você está com o Haxe 3.
+$ haxe
+Haxe Compiler 3.0.0 - (C)2005-2013 Haxe Foundation
+ Usage : haxe -main <class> [-swf|-js|-neko|-php|-cpp|-as3] <output> [options]
+
+Instalando no Arch Linux, eu precisei corrigir a variável de ambiente do Haxe.
+Vale a pena verificar se no seu sistema a variável usada é HAXE_STD_PATH. Caso
+não seja, faça:
+$ sudo su
+# echo "export HAXE_STD_PATH=/etc/profile.d/haxe.sh" > /etc/profile.d/haxe.sh 
+$ exit
+
+Nesse ponto, seria melhor reiniciar o computador para atualizar as variáveis de
+sistema antes de seguir com a instalação. Caso você não queira fazer isso agora,
+execute:
+$ sudo su
+# source /etc/profile
+
+Isso faz com que as variáveis sejam recarregadas, porém elas só estão presentes
+no console onde o comando foi executado. Portando, para continuar você precisa
+executar os próximos comandos nesse mesmo console, lembrando que você já está
+como root (super usuário) e portanto deve omitir o "sudo" antes de cada operação
+listada daqui para frente.
+
+O próximo passo é configurar o haxelib e instalar o lime, openfl, actuate e o
+flixel.
+
+$ sudo haxelib setup
+
+$ sudo haxelib install lime
+$ sudo haxelib run lime setup
+
+$ sudo haxelib install openfl
+$ sudo haxelib install actuate
+$ sudo haxelib install flixel
+
+Por padrão, você já conseguirá compilar seu projeto para Flash, Neko e HTML5. Se
+você quiser ter outros alvos, é preciso fazer mais setup. Mas deixe para fazer
+isso depois que o padrão já estiver funcionando.
+    $ lime setup windows
+    $ lime setup android
+    $ lime setup blackberry
+    $ lime setup tizen
+
+Vamos testar um exemplo do openfl
+$ lime create openfl:AddingAnimation
+$ cd AddingAnimation
+$ lime test html5
+
+Isso deve abrir uma janela do seu navegador padrão e o conteúdo da página será
+uma imagem do OpenFL se mexendo. Também é interessante trocar o "html5" do
+comando por "neko". Dessa forma você verá um programa independente só com a
+animação.
+
+------
+
+======================================
+Configurando o HaxeFlixel para android
+======================================
+
+Depois que o HaxeFlixel já estiver instalado de acordo com o post anterior,
+podemos configurar nosso ambiente de desenvolvimento de modo a compilar também
+para android.
+
+Para evitar problemas, é bom ir para a raiz do sistema. Na minha máquina, depois
+de baixar o SDK inteiro e tentar instalar, o script de setup deu um erro por não
+conseuir encontar o comando "android" a partir da pasta onde estava. Assim, ir
+para a raiz evita esse problema. A partir de lá, vamos fazer a instalação.
+
+$ cd /
+$ sudo lime setup android
+
+Se você já tiver o SDK, NDK, Ant e/ou JDK, então pode responder "n" para as
+perguntas do script e depois apenas apontar as pastas do sistema onde essas
+ferramentas já estão instaladas. Caso contrário, instale tudo pelo script mesmo.
+
+Download and install the Android SDK? [y/n/a] ?
+> y
+Downloading android-sdk_r22.0.5-linux.tgz...
+Download complete : 105641005 bytes in 145.5s (708.8KB/s)
+Output directory [/opt/android-sdk]:
+> [ENTER]
+
+Depois disso, vai aparecer o gerenciador de instalações do android. Nessa
+ferramenta, você escolhe para quais plataformas seu ambiente de desenvolvimento
+poderá gerar aplicativos. A princípio, você só precisa do platform-tools básico
+e o pacote para API 10, que é compatível com as versões de android 2.3.3 e
+superiores. Caso você queira ter outras plataformas alvo, marque os pacotes
+correspondentes.
+
+Lembre-se que você pode abrir novamente essa janela a qualquer momento usando o
+comando /opt/android-sdk/tools/android
+
+Clique em "Install packages", aceite os termos de uso e depois clique em
+"Install". Quando terminar, feche a janela para continuar com o script de
+instalação.
+
+Download and install the Android NDK? [y/n/a] ?
+> y
+Downloading android-ndk-r8b-linux-x86.tar.bz2...
+Download complete : 160466240 bytes in 251.3s (623.3KB/s)
+Output directory [/opt/android-ndk]:
+> [ENTER]
+Download and install Apache Ant? [y/n/a] ?
+> y
+Downloading apache-ant-1.9.2-bin.tar.gz...
+Download complete : 5512093 bytes in 46.2s (116.4KB/s)
+Output directory [/opt/apache-ant]:
+> [ENTER]
+Download and install the Java JDK? [y/n/a] ?
+> n
+Path to Java JDK []:
+> /opt/java
+
+Agora que você já instalou tudo, execute novamente o script de setup mas com o
+seu usuário normal. Esse passo é bobo, pois você só confirma os locais de
+instalação das ferramentas recem baixadas, mas se você não fizer isso o lime
+reclama na hora de compilar o projeto.
+
+$ lime setup android
+
+Download and install the Android SDK? [y/n/a] ? n
+Download and install the Android NDK? [y/n/a] ? n
+Download and install Apache Ant? [y/n/a] ? n
+Download and install the Java JDK? [y/n/a] ? n
+
+Path to Android SDK []: /opt/android-sdk
+Path to Android NDK []: /opt/android-ndk
+Path to Apache Ant []: /opt/apache-ant
+Path to Java JDK [/opt/java/jre]: /opt/java
+
+Vamos aproveitar e já colocar essas novas ferramentas no path do sistema. Para
+isso, edite o arquivo /etc/profile e deixe a parte do path mais ou menos
+parecida com:
+
+PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"                      # Default   
+PATH="$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools" # Add SDK   
+PATH="$PATH:/opt/android-ndk"                                       # Add NDK   
+PATH="$PATH:/opt/apache-ant/bin"                                    # Add Ant   
+export PATH 
+
+Agora tudo já está instalado e podemos usar o exemplo AddingAnimation para
+testar. Então primeiro vamos voltar para a pasta do exemplo e depois vamos
+editar o arquivo project.xml para indicar qual é a api do android que vamos
+utilizar. Para isso, acrescente a tag:
+<android target-sdk-version="10" />
+Não precisa ser em nenhum lugar específico. Basta apenas ser entre as tags
+<project> e </project>
+
+Com isso, você deve conseguir gerar o aplicativo para android.
+$ lime build android
+
+Se não houver problemas, você verá uma mensagem BUILD SUCCESSFUL
+Os .apk gerados estão na pasta: ./Export/android/bin/bin/
+
+Conseguir os .apk já é legal, mas é muito chato ter que ficar passando para o
+celular. Para testar direto no celular do mesmo jeito que testamos no navegador,
+é preciso configurar seu aparelho para ficar em modo debug. Além disso, é
+preciso que o computador reconheça o celular.
+Para tal, siga: http://developer.android.com/tools/device.html
+
+Resumidamente, no linux você fará o seguinte:
+$ sudo su
+# echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="1004", MODE="0666", GROUP="plugdev"'\
+> /etc/udev/rules.d/51-android.rules
+# chmod a+r /etc/udev/rules.d/51-android.rules
+# exit
+
+Você deve trocar o código do idVendor para o correspondente ao seu celular. No
+caso do exemplo, 1004 funciona para aparelhos da LG. Uma tabela com todos os
+códigos está em: http://developer.android.com/tools/device.html#VendorIds
+
+Agora é um bom momento para reiniciar o computador, só para certeza que todas as
+variáveis de ambiente e também as regras do udev estarão carregadas
+corretamente. Mas se você ainda não quer fazer isso, execute:
+$ sudo udevadm control --reload-rules
+
+Depois de ter reiniciado o computador ou ter regarregado as regras do udev,
+ligue o celular no computador pelo cabo USB e verifique se ele está sendo
+reconhecido.
+$ /opt/android-sdk/platform-tools/adb devices
+
+Obs: se você já está com o PATH ok, pode usar simplesmente:
+$ adb devices
+
+Se a lista não estiver vazia, então o computador está reconhecendo seu celular e
+você já pode testar o exemplo anterior. Na pasta do projeto, faça:
+$ lime test android
+
+Pronto!
+Agora você já está preparado para fazer um jogo multiplataforma que roda até no
+Android. =)
+
+Dica: Com essa instalação você já tem ferramentas de debug à sua disposição.
+Use "adb logcat" no console ou a versão visual com "ddms".
