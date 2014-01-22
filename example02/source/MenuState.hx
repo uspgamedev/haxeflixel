@@ -12,6 +12,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 
 class MenuState extends State {
+    private var button: Button;
+
 	override public function create(): Void {
         Lib.trace("MenuState: update: create");
 		FlxG.cameras.bgColor = 0xff131c1b;
@@ -29,6 +31,9 @@ class MenuState extends State {
         text.size = 30;
         add(text);
         Lib.trace("MenuState: update: text added");
+
+        button = new Button(300, 300, "Button", "button.png");
+        add(button);
 
 		super.create();
 	}
@@ -48,7 +53,9 @@ class MenuState extends State {
         #if android
         for (touch in FlxG.touches.list) {
             if (touch.justPressed) {
-                switchState(new PlayState());
+                if (button.overlapsPoint(touch)) {
+                    switchState(new PlayState());
+                }
             }
         }
         #end

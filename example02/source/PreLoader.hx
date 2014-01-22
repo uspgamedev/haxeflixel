@@ -24,12 +24,8 @@ class PreLoader extends State {
         string = "Loading";
         spriteAssets = [
             "background.png",
-            "boat.png",
-            "submarine.png",
-            "barrel.png",
-            "bomb.png",
+            "button.png",
             "explosion.png",
-
         ];
         soundAssets = [
             "underwater_explosion.ogg",
