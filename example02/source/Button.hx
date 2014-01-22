@@ -15,7 +15,8 @@ class Button extends FlxGroup {
         background = new Sprite(X, Y, _background);
         background.setAnchor(background.width / 2, background.height / 2);
 
-        text = new FlxText(0, 0, cast(background.width, Int), label);
+        text = new FlxText(X, Y, cast(background.width, Int), label);
+        text.alignment = "center";
 
         add(background);
         add(text);
@@ -25,11 +26,18 @@ class Button extends FlxGroup {
         return background.overlapsPoint(point);
     }
 
+    public function setPosition(X: Float = 0, Y: Float = 0): Void {
+        text.x = X;
+        text.y = Y;
+        background.setPosition(X, Y);
+    }
+
     public function getPosition(): FlxPoint {
         return background.getPosition();
     }
 
     public function setX(X: Float): Float {
+        text.x = X;
         return background.setX(X);
     }
 
@@ -38,6 +46,7 @@ class Button extends FlxGroup {
     }
 
     public function setY(Y: Float): Float {
+        text.y = Y;
         return background.setY(Y);
     }
 
