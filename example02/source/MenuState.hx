@@ -48,6 +48,12 @@ class MenuState extends State {
             Lib.trace("MenuState: update: SPACE");
             switchState(new PlayState());
         }
+
+        if (FlxG.mouse.justReleased) {
+            if (button.overlapsPoint(FlxG.mouse)) {
+                switchState(new PlayState());
+            }
+        }
         #end
 
         #if android
