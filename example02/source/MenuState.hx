@@ -32,7 +32,7 @@ class MenuState extends State {
         add(text);
         Lib.trace("MenuState: update: text added");
 
-        button = new Button(300, 300, "Button", "button.png");
+        button = new Button(buttonCallback, 300, 300, "Button", "button.png");
         add(button);
 
 		super.create();
@@ -48,23 +48,8 @@ class MenuState extends State {
             Lib.trace("MenuState: update: SPACE");
             switchState(new PlayState());
         }
-
-        if (FlxG.mouse.justReleased) {
-            if (button.overlapsPoint(FlxG.mouse)) {
-                switchState(new PlayState());
-            }
-        }
         #end
-
-        #if android
-        for (touch in FlxG.touches.list) {
-            if (touch.justPressed) {
-                if (button.overlapsPoint(touch)) {
-                    switchState(new PlayState());
-                }
-            }
-        }
-        #end
+        //button.update();
 
 		super.update();
 	}
@@ -77,5 +62,9 @@ class MenuState extends State {
             System.exit(0);
             #end
         }
+    }
+
+    private function buttonCallback(): Void {
+        switchState(new PlayState());
     }
 }

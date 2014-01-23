@@ -1,3 +1,4 @@
+import flixel.FlxG;
 import flixel.util.FlxPoint;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup;
@@ -6,11 +7,13 @@ class Button extends FlxGroup {
     private var label: String;
     private var text: FlxText;
     private var background: Sprite;
+    private var onClickCallback: Void->Void;
 
-    public function new(X: Float = 0, Y: Float = 0, _label: String = "",
-                        _background: String = "") {
+    public function new(?callback: Void->Void, X: Float = 0, Y: Float = 0,
+                        _label: String = "", _background: String = "") {
         super();
 
+        onClickCallback = callback;
         label = _label;
         background = new Sprite(X, Y, _background);
         background.setAnchor(background.width / 2, background.height / 2);
@@ -52,5 +55,27 @@ class Button extends FlxGroup {
 
     public function getY(): Float {
         return background.getY();
+    }
+
+    override public function update(): Void {
+        super.update();
+
+        #if !mobile
+        if (FlxG.mouse.justReleased) {
+            if (overlapsPoint(FlxG.mouse)) {
+                onClickCallback();
+            }
+        }
+        #end
+
+        #if android
+        for (touch in FlxG.touches.list) {
+            if (touch.justPressed) {
+                if (overlapsPoint(touch)) {
+                    onClickCallback();
+                }
+            }
+        }
+        #end
     }
 }
