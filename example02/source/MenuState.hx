@@ -12,7 +12,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxRandom;
 
 class MenuState extends State {
-    private var button: Button;
+    private var buttonPlay: Button;
+    private var buttonExit: Button;
 
 	override public function create(): Void {
         Lib.trace("MenuState: update: create");
@@ -32,8 +33,10 @@ class MenuState extends State {
         add(text);
         Lib.trace("MenuState: update: text added");
 
-        button = new Button(buttonCallback, 300, 300, "Button", "button.png");
-        add(button);
+        buttonPlay = new Button(playCallback, 300, 150, "button.png", " Play");
+        buttonExit = new Button(exitCallback, 300, 300, "button.png", " Exit");
+        add(buttonPlay);
+        add(buttonExit);
 
 		super.create();
 	}
@@ -49,7 +52,6 @@ class MenuState extends State {
             switchState(new PlayState());
         }
         #end
-        //button.update();
 
 		super.update();
 	}
@@ -57,14 +59,21 @@ class MenuState extends State {
     override public function onBackButton(event: KeyboardEvent): Void {
         // Get ESCAPE from keyboard or BACK from android.
         if (event.keyCode == 27) {
-            #if android
+            #if !web
             //event.stopImmediatePropagation();
             System.exit(0);
             #end
         }
     }
 
-    private function buttonCallback(): Void {
+    private function playCallback(): Void {
         switchState(new PlayState());
+    }
+
+    private function exitCallback(): Void {
+        #if !web
+        //event.stopImmediatePropagation();
+        System.exit(0);
+        #end
     }
 }

@@ -10,7 +10,8 @@ class Button extends FlxGroup {
     private var onClickCallback: Void->Void;
 
     public function new(?callback: Void->Void, X: Float = 0, Y: Float = 0,
-                        _label: String = "", _background: String = "") {
+                        _background: String = "", _label: String = "",
+                        color: Int = 0xffffff, size: Int = 30) {
         super();
 
         onClickCallback = callback;
@@ -18,7 +19,10 @@ class Button extends FlxGroup {
         background = new Sprite(X, Y, _background);
         background.setAnchor(background.width / 2, background.height / 2);
 
-        text = new FlxText(X, Y, cast(background.width, Int), label);
+        text = new FlxText(X, Y, cast(background.width, Int), label, size);
+        text.color = color;
+        text.x -= background.getAnchor().x;
+        text.y -= text.height / 2 ;
         text.alignment = "center";
 
         add(background);
